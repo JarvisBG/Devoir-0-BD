@@ -1,0 +1,59 @@
+CREATE DATABASE CentreFormation;
+USE CentreFormation;
+
+CREATE TABLE Etudiant (
+  NumEtu INT PRIMARY KEY,
+  NomEtu VARCHAR(100),
+  PrenomEtu VARCHAR(100),
+  DateNaissance DATE,
+  Adresse VARCHAR(255),
+  VilleEtu VARCHAR(100),
+  NiveauEtu VARCHAR(50)
+);
+
+CREATE TABLE Session (
+  codeSession INT PRIMARY KEY,
+  dateDebut DATE NOT NULL,
+  dateFin DATE NOT NULL,
+  codeForm INT,
+  FOREIGN KEY (codeForm) REFERENCES Formation(codeForm)
+);
+
+CREATE TABLE Specialite (
+  codeSpec INT PRIMARY KEY,
+  nomSpec VARCHAR(100),
+  descSpec TEXT,
+  Active TINYINT(1) DEFAULT 1 -- Colonne "Active" qui prend la valeur 1 si active, 0 sinon
+);
+
+CREATE TABLE Formation (
+  codeForm INT PRIMARY KEY,
+  intituleForm VARCHAR(100),
+  dureeForm INT,
+  prixForm DECIMAL(10, 2)
+);
+
+CREATE TABLE Inscription (
+  NumEtu INT,
+  codeSession INT,
+  typeCours VARCHAR(100) NOT NULL,
+  PRIMARY KEY (NumEtu, codeSession),
+  FOREIGN KEY (NumEtu) REFERENCES Etudiant(NumEtu),
+  FOREIGN KEY (codeSession) REFERENCES Session(codeSession)
+);
+
+CREATE TABLE Concerne (
+  codeSession INT,
+  codeForm INT,
+  PRIMARY KEY (codeSession, codeForm),
+  FOREIGN KEY (codeSession) REFERENCES Session(codeSession),
+  FOREIGN KEY (codeForm) REFERENCES Formation(codeForm)
+);
+
+CREATE TABLE Apportent (
+  codeSpec INT,
+  codeForm INT,
+  PRIMARY KEY (codeSpec, codeForm),
+  FOREIGN KEY (codeSpec) REFERENCES Specialite(codeSpec),
+  FOREIGN KEY (codeForm) REFERENCES Formation(codeForm)
+);
